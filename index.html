@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Youth Intersection</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
     <style>
         * {
             margin: 0;
@@ -12,118 +14,190 @@
         }
 
         body {
-            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', sans-serif;
             line-height: 1.6;
             color: #333;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: #0a0a0a;
             min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* パーティクル背景 */
+        #particles-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            background: #000000;
+        }
+
+        .particle {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(52, 211, 153, 0.6);
+            pointer-events: none;
         }
 
         .container {
-            max-width: 1200px;
+            position: relative;
+            z-index: 1;
+            max-width: 100%;
             margin: 0 auto;
-            padding: 0 20px;
+            padding: 0;
         }
 
         /* ヘッダー / トップセクション */
         header {
-            background: rgba(255, 255, 255, 0.98);
-            padding: 60px 20px;
-            text-align: center;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            position: relative;
+            z-index: 1;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            justify-content: center;
+            text-align: left;
+            padding: 80px 100px;
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+
+        /* ヘッダー背景画像 */
+        header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url(''); /* ここに画像URLを入れる */
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            opacity: 0.3; /* 画像の透明度（0-1で調整可能） */
+            z-index: -1;
         }
 
         .logo-container {
-            width: 150px;
-            height: 150px;
-            margin: 0 auto 30px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            width: 180px;
+            height: 180px;
+            margin: 0 0 60px 0;
+            background: rgba(52, 211, 153, 0.1);
+            border: 3px solid rgba(52, 211, 153, 0.3);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            box-shadow: 0 8px 30px rgba(102, 126, 234, 0.3);
-            transition: transform 0.3s ease;
+            backdrop-filter: blur(10px);
+            transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            opacity: 0;
         }
 
         .logo-container:hover {
-            transform: scale(1.05);
+            transform: scale(1.1) rotate(5deg);
+            border-color: rgba(52, 211, 153, 0.8);
+            background: rgba(52, 211, 153, 0.2);
         }
 
         .logo-placeholder {
             color: white;
-            font-size: 48px;
-            font-weight: bold;
-            letter-spacing: 2px;
+            font-size: 52px;
+            font-weight: 700;
+            letter-spacing: 4px;
+        }
+
+        .title-wrapper {
+            opacity: 0;
         }
 
         h1 {
-            font-size: 3.5em;
-            font-weight: 700;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            margin-bottom: 10px;
-            letter-spacing: -1px;
+            font-size: 8em;
+            font-weight: 800;
+            color: white;
+            margin: 0;
+            line-height: 0.95;
+            letter-spacing: -4px;
+            text-transform: uppercase;
+            opacity: 1;
+        }
+
+        h1 .title-line {
+            display: block;
         }
 
         .subtitle {
-            font-size: 1.2em;
-            color: #666;
+            font-size: 1.4em;
+            color: rgba(255, 255, 255, 0.6);
             font-weight: 300;
+            letter-spacing: 2px;
+            opacity: 1;
+            margin-top: 30px;
+        }
+
+        .copyright {
+            position: absolute;
+            top: 40px;
+            left: 100px;
+            color: rgba(255, 255, 255, 0.4);
+            font-size: 0.85em;
+            letter-spacing: 2px;
+            opacity: 0;
         }
 
         /* メインコンテンツ */
         main {
-            padding: 60px 20px;
+            position: relative;
+            z-index: 1;
+            padding: 0;
         }
 
         section {
-            background: white;
-            border-radius: 20px;
-            padding: 50px;
-            margin-bottom: 40px;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            background: rgba(255, 255, 255, 0.98);
+            border-radius: 0;
+            padding: 120px 80px;
+            margin: 0;
+            box-shadow: none;
+            backdrop-filter: blur(10px);
+            opacity: 0;
+            transform: translateY(50px);
         }
 
-        section:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.15);
+        .content-divider {
+            border-top: 3px solid rgba(16, 185, 129, 0.2);
+            margin: 100px 0;
+        }
+
+        .section-label {
+            font-size: 0.85em;
+            color: #10b981;
+            font-weight: 600;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            margin-bottom: 10px;
         }
 
         h2 {
-            font-size: 2.2em;
-            margin-bottom: 25px;
-            color: #333;
-            position: relative;
-            padding-bottom: 15px;
-        }
-
-        h2::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 60px;
-            height: 4px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            border-radius: 2px;
+            font-size: 2.8em;
+            margin-bottom: 40px;
+            color: #1a1a1a;
+            font-weight: 700;
+            letter-spacing: -1px;
         }
 
         h3 {
-            font-size: 1.5em;
-            margin-top: 30px;
-            margin-bottom: 15px;
-            color: #667eea;
+            font-size: 1.6em;
+            margin-top: 40px;
+            margin-bottom: 20px;
+            color: #10b981;
+            font-weight: 600;
         }
 
         p {
-            font-size: 1.1em;
+            font-size: 1.15em;
             color: #555;
-            margin-bottom: 20px;
-            line-height: 1.8;
+            margin-bottom: 25px;
+            line-height: 1.9;
         }
 
         ul {
@@ -132,124 +206,217 @@
         }
 
         ul li {
-            padding: 12px 0;
-            padding-left: 30px;
+            padding: 18px 0 18px 40px;
             position: relative;
             color: #555;
-            font-size: 1.05em;
+            font-size: 1.1em;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        ul li:last-child {
+            border-bottom: none;
         }
 
         ul li::before {
-            content: '●';
+            content: '';
             position: absolute;
             left: 0;
-            color: #667eea;
-            font-size: 1.2em;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 8px;
+            height: 8px;
+            background: #10b981;
+            border-radius: 50%;
         }
 
         /* ニュースセクション */
+        .news-grid {
+            display: grid;
+            gap: 30px;
+        }
+
         .news-item {
-            padding: 25px;
-            border-left: 4px solid #667eea;
-            background: #f8f9ff;
-            margin-bottom: 20px;
-            border-radius: 8px;
-            transition: all 0.3s ease;
+            padding: 35px;
+            border-left: 5px solid #10b981;
+            background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+            border-radius: 15px;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
         }
 
         .news-item:hover {
-            background: #f0f2ff;
-            border-left-width: 6px;
-            padding-left: 23px;
+            transform: translateX(10px);
+            box-shadow: 0 10px 30px rgba(16, 185, 129, 0.2);
         }
 
         .news-date {
-            color: #764ba2;
+            color: #059669;
             font-weight: 600;
             font-size: 0.95em;
-            margin-bottom: 8px;
+            margin-bottom: 12px;
+            letter-spacing: 1px;
         }
 
         .news-title {
-            font-size: 1.2em;
-            font-weight: 600;
-            color: #333;
-            margin-bottom: 8px;
+            font-size: 1.35em;
+            font-weight: 700;
+            color: #1a1a1a;
+            margin-bottom: 12px;
         }
 
         .news-description {
             color: #666;
-            font-size: 0.95em;
+            font-size: 1em;
             margin: 0;
+            line-height: 1.7;
         }
 
         /* SNSリンク */
         .social-links {
             display: flex;
             justify-content: center;
-            gap: 30px;
-            margin-top: 30px;
+            gap: 40px;
+            margin-top: 50px;
         }
 
         .social-link {
-            width: 80px;
-            height: 80px;
+            width: 90px;
+            height: 90px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             text-decoration: none;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .social-link:hover {
-            transform: translateY(-5px) scale(1.1);
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
-        }
-
-        .social-link.instagram {
-            background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
-        }
-
-        .social-link.discord {
-            background: #5865F2;
+            transform: scale(1.1);
         }
 
         .social-icon {
-            font-size: 36px;
-            color: white;
+            font-size: 40px;
+            color: rgba(16, 185, 129, 0.9);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .social-link:hover .social-icon {
+            color: #10b981;
         }
 
         /* フッター */
         footer {
+            position: relative;
+            z-index: 1;
             text-align: center;
-            padding: 40px 20px;
-            color: white;
+            padding: 60px 20px;
+            color: rgba(255, 255, 255, 0.6);
             font-size: 0.95em;
         }
 
         /* レスポンシブ */
+        @media (max-width: 1200px) {
+            header {
+                padding: 60px 60px;
+            }
+        }
+
+        @media (max-width: 992px) {
+            header {
+                padding: 60px 50px;
+            }
+        }
+
         @media (max-width: 768px) {
-            h1 {
-                font-size: 2.5em;
+            header {
+                padding: 60px 40px;
+                align-items: flex-start;
+            }
+
+            .copyright {
+                left: 40px;
+                font-size: 0.75em;
             }
 
             section {
-                padding: 30px 25px;
+                padding: 80px 40px;
+            }
+
+            h2 {
+                font-size: 2em;
+            }
+
+            .social-links {
+                gap: 25px;
+            }
+
+            .social-link {
+                width: 75px;
+                height: 75px;
+            }
+
+            .social-icon {
+                font-size: 34px;
+            }
+
+            .content-divider {
+                margin: 60px 0;
+            }
+        }
+
+        @media (max-width: 576px) {
+            header {
+                padding: 50px 30px;
+            }
+
+            .copyright {
+                left: 30px;
+                top: 30px;
+            }
+
+            section {
+                padding: 60px 30px;
             }
 
             h2 {
                 font-size: 1.8em;
             }
 
-            .social-links {
-                gap: 20px;
+            h3 {
+                font-size: 1.3em;
+            }
+        }
+
+        @media (max-width: 400px) {
+            header {
+                padding: 40px 25px;
+            }
+
+            .copyright {
+                left: 25px;
+                top: 25px;
+                font-size: 0.7em;
+            }
+
+            section {
+                padding: 50px 25px;
+            }
+
+            h2 {
+                font-size: 1.6em;
+            }
+
+            h3 {
+                font-size: 1.2em;
+            }
+
+            p {
+                font-size: 1em;
             }
 
             .social-link {
-                width: 70px;
-                height: 70px;
+                width: 65px;
+                height: 65px;
             }
 
             .social-icon {
@@ -259,106 +426,290 @@
     </style>
 </head>
 <body>
+    <!-- パーティクル背景 -->
+    <div id="particles-canvas"></div>
+
     <!-- ヘッダー -->
     <header>
-        <div class="logo-container">
+        <div class="copyright">©2024</div>
+        <div class="logo-container" id="logo">
             <div class="logo-placeholder">YI</div>
         </div>
-        <h1>Youth Intersection</h1>
-        <p class="subtitle">未来を創る若者たちの交差点</p>
+        <div class="title-wrapper" id="title-wrapper">
+            <h1>
+                <span class="title-line">YOUTH</span>
+                <span class="title-line">INTERSECTION</span>
+            </h1>
+            <p class="subtitle">未来を創る若者たちの交差点</p>
+        </div>
     </header>
 
     <!-- メインコンテンツ -->
     <main class="container">
-        <!-- 理念・活動内容 -->
-        <section id="about">
-            <h2>理念・活動内容</h2>
-            
-            <h3>私たちの理念</h3>
-            <p>
-                Youth Intersectionは、多様なバックグラウンドを持つ学生たちが交差し、新しい価値を創造する場です。
-                異なる視点や経験が出会う「交差点」で、互いに学び合い、成長し、社会に貢献できる次世代のリーダーを育成します。
-            </p>
-
-            <h3>主な活動内容</h3>
-            <ul>
-                <li>異分野交流イベント：様々な専攻や興味を持つ学生が集まり、新しいアイデアを生み出すワークショップ</li>
-                <li>社会課題解決プロジェクト：地域や社会が抱える課題に対して、学生ならではの視点でアプローチ</li>
-                <li>スキルシェアセッション：メンバー同士が持つ知識やスキルを共有し、互いに高め合う勉強会</li>
-                <li>ゲストスピーカーセミナー：各界で活躍する方々をお招きし、キャリアや社会について学ぶ機会を提供</li>
-                <li>コミュニティイベント：メンバー間の絆を深めるための交流会やレクリエーション活動</li>
-            </ul>
-
-            <p>
-                私たちは、学生一人ひとりが持つ可能性を信じ、それを最大限に引き出せる環境を提供します。
-                Youth Intersectionで、あなたも新しい自分と出会いませんか？
-            </p>
-        </section>
-
-        <!-- ニュース -->
-        <section id="news">
-            <h2>ニュース</h2>
-            
-            <div class="news-item">
-                <div class="news-date">2024.03.15</div>
-                <div class="news-title">春の新入生歓迎イベント開催決定！</div>
-                <p class="news-description">
-                    4月7日（日）に新入生を歓迎する交流イベントを開催します。先輩メンバーとの交流や活動紹介を予定しています。詳細はInstagramをチェック！
-                </p>
-            </div>
-
-            <div class="news-item">
-                <div class="news-date">2024.03.01</div>
-                <div class="news-title">社会課題解決プロジェクト成果発表会を実施</div>
-                <p class="news-description">
-                    3ヶ月にわたる地域活性化プロジェクトの成果を発表しました。地域の方々からも高い評価をいただき、継続的な取り組みへと発展する予定です。
-                </p>
-            </div>
-
-            <div class="news-item">
-                <div class="news-date">2024.02.20</div>
-                <div class="news-title">ゲストスピーカーセミナー「起業家に学ぶ」開催レポート</div>
-                <p class="news-description">
-                    スタートアップ企業の代表をお招きし、起業の経験や学生時代の過ごし方についてお話しいただきました。参加者50名以上、大盛況のイベントとなりました。
-                </p>
-            </div>
-
-            <div class="news-item">
-                <div class="news-date">2024.02.10</div>
-                <div class="news-title">公式Discordサーバーをリニューアル</div>
-                <p class="news-description">
-                    メンバー同士のコミュニケーションをより活発にするため、Discordサーバーを大幅にリニューアルしました。プロジェクトごとのチャンネルや雑談スペースを充実させています。
-                </p>
-            </div>
-        </section>
-
-        <!-- SNSリンク -->
-        <section id="social">
-            <h2>SNS</h2>
-            <p style="text-align: center; margin-bottom: 30px;">
-                最新情報やイベント情報は各SNSで発信しています。<br>
-                ぜひフォロー・参加してください！
-            </p>
-            
-            <div class="social-links">
-                <a href="https://www.instagram.com/youthintersection/" class="social-link instagram" target="_blank" rel="noopener noreferrer" title="Instagram">
-                    <svg class="social-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
-                    </svg>
-                </a>
+        <!-- 全コンテンツを1つのセクションに -->
+        <section id="main-content" class="fade-in-section">
+            <div style="max-width: 1400px; margin: 0 auto; padding: 0 80px;">
+                <!-- 理念・活動内容 -->
+                <div class="section-label">Introduction</div>
+                <h2>理念・活動内容</h2>
                 
-                <a href="https://discord.gg/BVB6ZSqgnb" class="social-link discord" target="_blank" rel="noopener noreferrer" title="Discord">
-                    <svg class="social-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515a.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0a12.64 12.64 0 0 0-.617-1.25a.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057a19.9 19.9 0 0 0 5.993 3.03a.078.078 0 0 0 .084-.028a14.09 14.09 0 0 0 1.226-1.994a.076.076 0 0 0-.041-.106a13.107 13.107 0 0 1-1.872-.892a.077.077 0 0 1-.008-.128a10.2 10.2 0 0 0 .372-.292a.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127a12.299 12.299 0 0 1-1.873.892a.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028a19.839 19.839 0 0 0 6.002-3.03a.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419c0-1.333.956-2.419 2.157-2.419c1.21 0 2.176 1.096 2.157 2.42c0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419c0-1.333.955-2.419 2.157-2.419c1.21 0 2.176 1.096 2.157 2.42c0 1.333-.946 2.418-2.157 2.418z"/>
-                    </svg>
-                </a>
+                <h3>私たちの理念</h3>
+                <p>
+                    Youth Intersectionは、多様なバックグラウンドを持つ学生たちが交差し、新しい価値を創造する場です。
+                    異なる視点や経験が出会う「交差点」で、互いに学び合い、成長し、社会に貢献できる次世代のリーダーを育成します。
+                </p>
+
+                <h3>主な活動内容</h3>
+                <ul>
+                    <li>異分野交流イベント：様々な専攻や興味を持つ学生が集まり、新しいアイデアを生み出すワークショップ</li>
+                    <li>社会課題解決プロジェクト：地域や社会が抱える課題に対して、学生ならではの視点でアプローチ</li>
+                    <li>スキルシェアセッション：メンバー同士が持つ知識やスキルを共有し、互いに高め合う勉強会</li>
+                    <li>ゲストスピーカーセミナー：各界で活躍する方々をお招きし、キャリアや社会について学ぶ機会を提供</li>
+                    <li>コミュニティイベント：メンバー間の絆を深めるための交流会やレクリエーション活動</li>
+                </ul>
+
+                <p>
+                    私たちは、学生一人ひとりが持つ可能性を信じ、それを最大限に引き出せる環境を提供します。
+                    Youth Intersectionで、あなたも新しい自分と出会いませんか？
+                </p>
+
+                <div class="content-divider"></div>
+
+                <!-- ニュース -->
+                <div class="section-label">News & Updates</div>
+                <h2>ニュース</h2>
+                
+                <div class="news-grid">
+                    <div class="news-item">
+                        <div class="news-date">2024.03.15</div>
+                        <div class="news-title">春の新入生歓迎イベント開催決定！</div>
+                        <p class="news-description">
+                            4月7日（日）に新入生を歓迎する交流イベントを開催します。先輩メンバーとの交流や活動紹介を予定しています。詳細はInstagramをチェック！
+                        </p>
+                    </div>
+
+                    <div class="news-item">
+                        <div class="news-date">2024.03.01</div>
+                        <div class="news-title">社会課題解決プロジェクト成果発表会を実施</div>
+                        <p class="news-description">
+                            3ヶ月にわたる地域活性化プロジェクトの成果を発表しました。地域の方々からも高い評価をいただき、継続的な取り組みへと発展する予定です。
+                        </p>
+                    </div>
+
+                    <div class="news-item">
+                        <div class="news-date">2024.02.20</div>
+                        <div class="news-title">ゲストスピーカーセミナー「起業家に学ぶ」開催レポート</div>
+                        <p class="news-description">
+                            スタートアップ企業の代表をお招きし、起業の経験や学生時代の過ごし方についてお話しいただきました。参加者50名以上、大盛況のイベントとなりました。
+                        </p>
+                    </div>
+
+                    <div class="news-item">
+                        <div class="news-date">2024.02.10</div>
+                        <div class="news-title">公式Discordサーバーをリニューアル</div>
+                        <p class="news-description">
+                            メンバー同士のコミュニケーションをより活発にするため、Discordサーバーを大幅にリニューアルしました。プロジェクトごとのチャンネルや雑談スペースを充実させています。
+                        </p>
+                    </div>
+                </div>
+
+                <div class="content-divider"></div>
+
+                <!-- SNSリンク -->
+                <div class="section-label">Connect with us</div>
+                <h2>SNS</h2>
+                <p style="text-align: center; margin-bottom: 30px;">
+                    最新情報やイベント情報は各SNSで発信しています。<br>
+                    ぜひフォロー・参加してください！
+                </p>
+                
+                <div class="social-links">
+                    <a href="https://www.instagram.com/" class="social-link instagram" target="_blank" rel="noopener noreferrer" title="Instagram">
+                        <svg class="social-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+                        </svg>
+                    </a>
+                    
+                    <a href="https://discord.com/" class="social-link discord" target="_blank" rel="noopener noreferrer" title="Discord">
+                        <svg class="social-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515a.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0a12.64 12.64 0 0 0-.617-1.25a.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057a19.9 19.9 0 0 0 5.993 3.03a.078.078 0 0 0 .084-.028a14.09 14.09 0 0 0 1.226-1.994a.076.076 0 0 0-.041-.106a13.107 13.107 0 0 1-1.872-.892a.077.077 0 0 1-.008-.128a10.2 10.2 0 0 0 .372-.292a.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127a12.299 12.299 0 0 1-1.873.892a.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028a19.839 19.839 0 0 0 6.002-3.03a.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419c0-1.333.956-2.419 2.157-2.419c1.21 0 2.176 1.096 2.157 2.42c0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419c0-1.333.955-2.419 2.157-2.419c1.21 0 2.176 1.096 2.157 2.42c0 1.333-.946 2.418-2.157 2.418z"/>
+                        </svg>
+                    </a>
+                </div>
             </div>
         </section>
     </main>
 
     <!-- フッター -->
     <footer>
-        <p>&copy; 2024 Youth Intersection. All rights reserved.</p>
+        <p>©2024 Youth Intersection. All rights reserved.</p>
     </footer>
+
+    <script>
+        // GSAPアニメーション設定
+        gsap.registerPlugin(ScrollTrigger);
+
+        // 画面幅に応じてタイトルのフォントサイズを動的に計算
+        function adjustTitleSize() {
+            const titleWrapper = document.querySelector('.title-wrapper');
+            const h1 = document.querySelector('h1');
+            const subtitle = document.querySelector('.subtitle');
+            const logo = document.querySelector('.logo-container');
+            
+            const screenWidth = window.innerWidth;
+            
+            // 画面幅の12%をベースフォントサイズとする（最小2.5em、最大8em）
+            let fontSize = screenWidth * 0.12;
+            
+            // ピクセル値をemに変換（16pxを1emとして計算）
+            let fontSizeEm = fontSize / 16;
+            
+            // 最小値と最大値の制限
+            if (fontSizeEm < 2.5) fontSizeEm = 2.5;
+            if (fontSizeEm > 8) fontSizeEm = 8;
+            
+            // タイトルのフォントサイズを設定
+            h1.style.fontSize = fontSizeEm + 'em';
+            
+            // レタースペーシングも比例して調整
+            let letterSpacing = -fontSizeEm * 0.5;
+            h1.style.letterSpacing = letterSpacing + 'px';
+            
+            // サブタイトルのサイズも調整（タイトルの18%程度）
+            let subtitleSize = fontSizeEm * 0.18;
+            if (subtitleSize < 0.8) subtitleSize = 0.8;
+            if (subtitleSize > 1.4) subtitleSize = 1.4;
+            subtitle.style.fontSize = subtitleSize + 'em';
+            
+            // ロゴサイズも調整
+            let logoSize = screenWidth * 0.12;
+            if (logoSize < 80) logoSize = 80;
+            if (logoSize > 180) logoSize = 180;
+            logo.style.width = logoSize + 'px';
+            logo.style.height = logoSize + 'px';
+            
+            // ロゴ内のテキストサイズ
+            let logoTextSize = logoSize * 0.3;
+            document.querySelector('.logo-placeholder').style.fontSize = logoTextSize + 'px';
+        }
+
+        // パーティクルの生成
+        function createParticles() {
+            const canvas = document.getElementById('particles-canvas');
+            const particleCount = 50;
+
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                
+                // ランダムなサイズ
+                const size = Math.random() * 4 + 2;
+                particle.style.width = size + 'px';
+                particle.style.height = size + 'px';
+                
+                // ランダムな初期位置
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.top = Math.random() * 100 + '%';
+                
+                canvas.appendChild(particle);
+
+                // GSAPアニメーション
+                gsap.to(particle, {
+                    x: () => (Math.random() - 0.5) * 200,
+                    y: () => (Math.random() - 0.5) * 200,
+                    opacity: () => Math.random() * 0.5 + 0.3,
+                    duration: () => Math.random() * 3 + 3,
+                    repeat: -1,
+                    yoyo: true,
+                    ease: 'sine.inOut',
+                    delay: Math.random() * 2
+                });
+            }
+        }
+
+        // ページロード時のアニメーション
+        window.addEventListener('load', () => {
+            // タイトルサイズを調整
+            adjustTitleSize();
+            
+            createParticles();
+
+            // ヘッダー要素のアニメーション
+            const timeline = gsap.timeline();
+            
+            timeline
+                .to('.copyright', {
+                    opacity: 1,
+                    duration: 1,
+                    ease: 'power2.out'
+                })
+                .to('#logo', {
+                    opacity: 1,
+                    scale: 1,
+                    duration: 1.2,
+                    ease: 'back.out(1.5)'
+                }, '-=0.5')
+                .to('#title-wrapper', {
+                    opacity: 1,
+                    y: 0,
+                    duration: 1.2,
+                    ease: 'power3.out'
+                }, '-=0.6');
+
+            // スクロールトリガーでセクションをフェードイン
+            gsap.utils.toArray('.fade-in-section').forEach(section => {
+                gsap.to(section, {
+                    opacity: 1,
+                    y: 0,
+                    duration: 1.2,
+                    ease: 'power3.out',
+                    scrollTrigger: {
+                        trigger: section,
+                        start: 'top 80%',
+                        end: 'top 50%',
+                        toggleActions: 'play none none none'
+                    }
+                });
+            });
+
+            // ニュースアイテムのスタッガーアニメーション
+            gsap.utils.toArray('.news-item').forEach((item, index) => {
+                gsap.from(item, {
+                    opacity: 0,
+                    x: -50,
+                    duration: 0.8,
+                    delay: index * 0.1,
+                    ease: 'power2.out',
+                    scrollTrigger: {
+                        trigger: '#main-content',
+                        start: 'top 70%',
+                        toggleActions: 'play none none none'
+                    }
+                });
+            });
+
+            // SNSアイコンはアニメーションなし
+        });
+
+        // ウィンドウリサイズ時にタイトルサイズを再調整
+        window.addEventListener('resize', () => {
+            adjustTitleSize();
+        });
+
+        // スムーススクロール
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    gsap.to(window, {
+                        duration: 1,
+                        scrollTo: target,
+                        ease: 'power2.inOut'
+                    });
+                }
+            });
+        });
+    </script>
 </body>
 </html>
