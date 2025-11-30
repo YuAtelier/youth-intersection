@@ -71,11 +71,11 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background-image: url(''); /* ここに画像URLを入れる */
+            background-image: url('/mnt/user-data/uploads/Untitled.svg');
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
-            opacity: 0.3; /* 画像の透明度（0-1で調整可能） */
+            opacity: 1; /* 画像の透明度（0-1で調整可能） */
             z-index: -1;
         }
 
@@ -86,7 +86,7 @@
             background: rgba(52, 211, 153, 0.1);
             border: 3px solid rgba(52, 211, 153, 0.3);
             border-radius: 50%;
-            display: flex;
+            display: none; /* ロゴを非表示 */
             align-items: center;
             justify-content: center;
             backdrop-filter: blur(10px);
@@ -235,6 +235,84 @@
             gap: 30px;
         }
 
+        /* コンテンツカード */
+        .contents-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 40px;
+            margin-top: 40px;
+        }
+
+        .content-card {
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 1px solid rgba(16, 185, 129, 0.1);
+        }
+
+        .content-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 40px rgba(16, 185, 129, 0.2);
+        }
+
+        .content-image {
+            width: 100%;
+            height: 220px;
+            overflow: hidden;
+            background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+        }
+
+        .content-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .content-card:hover .content-image img {
+            transform: scale(1.05);
+        }
+
+        .content-info {
+            padding: 30px;
+        }
+
+        .content-title {
+            font-size: 1.4em;
+            font-weight: 700;
+            color: #1a1a1a;
+            margin: 0 0 15px 0;
+        }
+
+        .content-description {
+            font-size: 0.95em;
+            color: #666;
+            line-height: 1.7;
+            margin-bottom: 25px;
+        }
+
+        .visit-button {
+            display: inline-block;
+            padding: 12px 32px;
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.9em;
+            letter-spacing: 1px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+        }
+
+        .visit-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
+            background: linear-gradient(135deg, #059669 0%, #047857 100%);
+        }
+
         .news-item {
             padding: 35px;
             border-left: 5px solid #10b981;
@@ -319,11 +397,21 @@
             header {
                 padding: 60px 60px;
             }
+
+            .contents-grid {
+                grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+                gap: 30px;
+            }
         }
 
         @media (max-width: 992px) {
             header {
                 padding: 60px 50px;
+            }
+
+            .contents-grid {
+                grid-template-columns: 1fr;
+                gap: 30px;
             }
         }
 
@@ -431,7 +519,7 @@
 
     <!-- ヘッダー -->
     <header>
-        <div class="copyright">©2024</div>
+        <div class="copyright">©2025</div>
         <div class="logo-container" id="logo">
             <div class="logo-placeholder">YI</div>
         </div>
@@ -440,7 +528,7 @@
                 <span class="title-line">YOUTH</span>
                 <span class="title-line">INTERSECTION</span>
             </h1>
-            <p class="subtitle">未来を創る若者たちの交差点</p>
+            <p class="subtitle">学生に新たな視点を届ける</p>
         </div>
     </header>
 
@@ -455,23 +543,67 @@
                 
                 <h3>私たちの理念</h3>
                 <p>
-                    Youth Intersectionは、多様なバックグラウンドを持つ学生たちが交差し、新しい価値を創造する場です。
-                    異なる視点や経験が出会う「交差点」で、互いに学び合い、成長し、社会に貢献できる次世代のリーダーを育成します。
+                    学生は熱意ある行動をしますが、視野の狭さから誤った方向に進むことがあります。その努力を無駄にしないため、互いに支え合い、学びあうことのできる環境がYouth Intersectionです。
                 </p>
 
                 <h3>主な活動内容</h3>
                 <ul>
-                    <li>異分野交流イベント：様々な専攻や興味を持つ学生が集まり、新しいアイデアを生み出すワークショップ</li>
-                    <li>社会課題解決プロジェクト：地域や社会が抱える課題に対して、学生ならではの視点でアプローチ</li>
-                    <li>スキルシェアセッション：メンバー同士が持つ知識やスキルを共有し、互いに高め合う勉強会</li>
-                    <li>ゲストスピーカーセミナー：各界で活躍する方々をお招きし、キャリアや社会について学ぶ機会を提供</li>
-                    <li>コミュニティイベント：メンバー間の絆を深めるための交流会やレクリエーション活動</li>
+                    <li>交流会の実施：熱意ある学生たちが対面で交流</li>
+                    <li>Discordコミュニティの運営：各メンバーのプロジェクト内容共有や、ミーティングを実施</li>
                 </ul>
 
-                <p>
-                    私たちは、学生一人ひとりが持つ可能性を信じ、それを最大限に引き出せる環境を提供します。
-                    Youth Intersectionで、あなたも新しい自分と出会いませんか？
-                </p>
+                <div class="content-divider"></div>
+
+                <!-- コンテンツ -->
+                <div class="section-label">Contents</div>
+                <h2>コンテンツ</h2>
+                
+                <div class="contents-grid">
+                    <div class="content-card">
+                        <div class="content-image">
+                            <img src="https://assets.st-note.com/production/uploads/images/232258140/rectangle_large_type_2_35ae7c8fc7c8fb4c6a23cdf80cedf704.png?width=2000&height=2000&fit=bounds&quality=85" alt="コンテンツ1">
+                        </div>
+                        <div class="content-info">
+                            <h3 class="content-title">高校生 福祉に思う</h3>
+                            <p class="content-description">
+                                福祉の固定概念を超え、未来を支える新たな視点を届けるためのインタビュー。
+                            </p>
+                            <a href="https://note.com/yi2025/n/nbbb63a907b85 class="visit-button" target="_blank" rel="noopener noreferrer">
+                                VISIT
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="content-card">
+                        <div class="content-image">
+                            <img src="https://via.placeholder.com/400x250" alt="コンテンツ2">
+                        </div>
+                        <div class="content-info">
+                            <h3 class="content-title">プロジェクト名2</h3>
+                            <p class="content-description">
+                                このプロジェクトの説明文がここに入ります。簡潔に内容を説明してください。
+                            </p>
+                            <a href="https://example.com" class="visit-button" target="_blank" rel="noopener noreferrer">
+                                VISIT
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="content-card">
+                        <div class="content-image">
+                            <img src="https://via.placeholder.com/400x250" alt="コンテンツ3">
+                        </div>
+                        <div class="content-info">
+                            <h3 class="content-title">プロジェクト名3</h3>
+                            <p class="content-description">
+                                このプロジェクトの説明文がここに入ります。簡潔に内容を説明してください。
+                            </p>
+                            <a href="https://example.com" class="visit-button" target="_blank" rel="noopener noreferrer">
+                                VISIT
+                            </a>
+                        </div>
+                    </div>
+                </div>
 
                 <div class="content-divider"></div>
 
@@ -481,34 +613,18 @@
                 
                 <div class="news-grid">
                     <div class="news-item">
-                        <div class="news-date">2024.03.15</div>
-                        <div class="news-title">春の新入生歓迎イベント開催決定！</div>
+                        <div class="news-date">2025.11.30</div>
+                        <div class="news-title">Youth Intersection公式サイトを開設</div>
                         <p class="news-description">
-                            4月7日（日）に新入生を歓迎する交流イベントを開催します。先輩メンバーとの交流や活動紹介を予定しています。詳細はInstagramをチェック！
+                            Youth Intersectionをより多くの方々に知っていただけるよう、団体の概要・各種SNS等を掲載した公式サイトを開設しました。
                         </p>
                     </div>
-
+                    
                     <div class="news-item">
-                        <div class="news-date">2024.03.01</div>
-                        <div class="news-title">社会課題解決プロジェクト成果発表会を実施</div>
+                        <div class="news-date">2025.04.27</div>
+                        <div class="news-title">交流会をｘBridge-Kyobashiで開催</div>
                         <p class="news-description">
-                            3ヶ月にわたる地域活性化プロジェクトの成果を発表しました。地域の方々からも高い評価をいただき、継続的な取り組みへと発展する予定です。
-                        </p>
-                    </div>
-
-                    <div class="news-item">
-                        <div class="news-date">2024.02.20</div>
-                        <div class="news-title">ゲストスピーカーセミナー「起業家に学ぶ」開催レポート</div>
-                        <p class="news-description">
-                            スタートアップ企業の代表をお招きし、起業の経験や学生時代の過ごし方についてお話しいただきました。参加者50名以上、大盛況のイベントとなりました。
-                        </p>
-                    </div>
-
-                    <div class="news-item">
-                        <div class="news-date">2024.02.10</div>
-                        <div class="news-title">公式Discordサーバーをリニューアル</div>
-                        <p class="news-description">
-                            メンバー同士のコミュニケーションをより活発にするため、Discordサーバーを大幅にリニューアルしました。プロジェクトごとのチャンネルや雑談スペースを充実させています。
+                            夢や刺激を求めるu-18~u-22を対象に、異分野の若者が交流するイベントをX Bridge-Kyobashiで開催しました。多くの方々に来ていただき、大盛況となりました。
                         </p>
                     </div>
                 </div>
@@ -524,7 +640,7 @@
                 </p>
                 
                 <div class="social-links">
-                    <a href="https://www.instagram.com/" class="social-link instagram" target="_blank" rel="noopener noreferrer" title="Instagram">
+                    <a href="https://www.instagram.com/youthintersection/" class="social-link instagram" target="_blank" rel="noopener noreferrer" title="Instagram">
                         <svg class="social-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
                             <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
                         </svg>
@@ -542,7 +658,7 @@
 
     <!-- フッター -->
     <footer>
-        <p>©2024 Youth Intersection. All rights reserved.</p>
+        <p>©2025 Youth Intersection. All rights reserved.</p>
     </footer>
 
     <script>
